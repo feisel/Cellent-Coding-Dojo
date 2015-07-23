@@ -2,22 +2,12 @@
 using System.Collections.Generic;
 using System.Device.Location;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace TestClient
+namespace ccdService.Models
 {
-    class Picture
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
 
-        public string Description { get; set; }
-
-        public PictureDetails Details { get; set; }
-    }
-
-    internal class PictureDetails
+    public class PictureDetails
     {
         public PictureDetails()
         {

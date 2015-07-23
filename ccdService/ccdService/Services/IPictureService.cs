@@ -6,16 +6,17 @@ using System.Web;
 
 namespace ccdService.Services
 {
-    internal interface IPictureService
+    public interface IPictureService
     {
-        IEnumerable<Picture> GetAllPictures();
+        IEnumerable<PictureEntity> GetAllPictures();
 
-        Picture GetPicture(int id);
+        PictureEntity GetPicture(int id);
 
-        Picture CreatePicture(string name, string description,byte[] content);
+        PictureEntity CreatePicture(string name, string description,byte[] content);
 
         void DeletePicture(int id);
 
+        void UpdatePicture(PictureEntity picture);
 
     }
 }

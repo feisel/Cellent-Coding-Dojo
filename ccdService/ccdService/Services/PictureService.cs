@@ -7,7 +7,7 @@ using ccdService.Controllers;
 
 namespace ccdService.Services
 {
-    internal class PictureService : IPictureService
+    public class PictureService : IPictureService
     {
         IPictureProvider provider;
 
@@ -16,7 +16,7 @@ namespace ccdService.Services
             this.provider = provider;
         }
 
-        public Picture CreatePicture(string name, string description, byte[] content)
+        public PictureEntity CreatePicture(string name, string description, byte[] content)
         {
             return provider.CreatePicture(name, description, content);
         }
@@ -26,16 +26,21 @@ namespace ccdService.Services
             provider.DeletePicture(id);
         }
 
-        public IEnumerable<Picture> GetAllPictures()
+        public IEnumerable<PictureEntity> GetAllPictures()
         {
 
             return provider.GetAllPictures();
 
         }
 
-        public Picture GetPicture(int id)
+        public PictureEntity GetPicture(int id)
         {
             return provider.GetPicture(id);
+        }
+
+        public void UpdatePicture(PictureEntity picture)
+        {
+            provider.UpdatePicture(picture);
         }
     }
 }

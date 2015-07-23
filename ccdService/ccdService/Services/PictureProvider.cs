@@ -6,9 +6,9 @@ using ccdService.Controllers;
 
 namespace ccdService.Services
 {
-    internal class PictureProvider : IPictureProvider
+    public class PictureProvider : IPictureProvider
     {
-        private List<Picture> pictureList = new List<Picture>();
+        private List<PictureEntity> pictureList = new List<PictureEntity>();
 
         public PictureProvider()
         {
@@ -16,11 +16,11 @@ namespace ccdService.Services
         }
 
 
-        private static IEnumerable<Picture> CreateDummyPictures()
+        private static IEnumerable<PictureEntity> CreateDummyPictures()
         {
-            List<Picture> resultList = new List<Picture>();
+            List<PictureEntity> resultList = new List<PictureEntity>();
 
-            Picture pic = new Picture();
+            PictureEntity pic = new PictureEntity();
             pic.UserId = 1;
             pic.Description = "TestBild";
             pic.Name = "TestBild";
@@ -29,27 +29,26 @@ namespace ccdService.Services
             return resultList;
         }
 
-        public IEnumerable<Picture> GetAllPictures()
+        public IEnumerable<PictureEntity> GetAllPictures()
         {
             return pictureList;
         }
 
 
-
-
-        public Picture GetPicture(int id)
+        public PictureEntity GetPicture(int id)
         {
             return pictureList.Where(x => x.Id == id).SingleOrDefault();
         }
 
-        public Picture CreatePicture(string name, string description,byte[] content)
+        public PictureEntity CreatePicture(string name, string description,byte[] content)
         {
-            var newPicture = new Picture();
+            var newPicture = new PictureEntity();
             var newId = GetNextValidPictureId();
             newPicture.Id = newId;
             newPicture.Description = description;
             newPicture.Name = name;
-            newPicture.Content = content;
+            newPicture.Details = new PictureDetailsEntity();
+            newPicture.Details.Content = content;
 
             pictureList.Add(newPicture);
 
@@ -68,6 +67,20 @@ namespace ccdService.Services
            var picture =  pictureList.Where(x => x.Id == id).SingleOrDefault();
             if (picture != null)
                 pictureList.Remove(picture);
+        }
+
+        public void UpdatePicture(PictureEntity picture)
+        {
+            var pictureEntity = pictureList.Where(x => x.Id == picture.Id).SingleOrDefault();
+            if (pictureEntity != null)
+            {
+                pictureEntity.Description = picture.Description;
+                pictureEntity.Name = picture.Name;
+                pictureEntity.UserId = picture.UserId;
+                pictureEntity.Details = picture.Details;
+
+
+            }
         }
     }
 }

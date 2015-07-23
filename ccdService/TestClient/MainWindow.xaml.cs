@@ -30,9 +30,16 @@ namespace TestClient
             
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private async void button_Click(object sender, RoutedEventArgs e)
         {
-            restclient.RunAsync();
+           var result = await  restclient.GetAllPictures();
+
+
+            foreach(var pic in result)
+            {
+
+            }
+           
         }
 
         private void button_Copy_Click(object sender, RoutedEventArgs e)
@@ -42,9 +49,14 @@ namespace TestClient
             var fileContent = File.ReadAllBytes(filePath);
 
             Picture newPicture = new Picture();
-            newPicture.Content = fileContent;
+            
             newPicture.Description = "testPic2";
             newPicture.Name = "asdfasd";
+            newPicture.Details = new PictureDetails();
+            newPicture.Details.Position.Altitude = 54.03;
+            newPicture.Details.Position.Longitude = 10;
+            newPicture.Details.Content = fileContent;
+            
 
             restclient.UploadNewPicture(newPicture);
         }

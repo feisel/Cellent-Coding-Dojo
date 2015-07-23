@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -32,31 +33,36 @@ namespace TestClient
             }
         }
 
+        public async Task<IEnumerable<Picture>> GetAllPictures()
+        {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(PICTURESERVICEPATH);
+
+                response.EnsureSuccessStatusCode();    // Throw if not a success code.
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<IEnumerable<Picture>>();
+                    
+                }
+
+                return null;
+            }
+            catch (HttpRequestException e)
+            {
+                // Handle exception.
+                throw;
+            }
+        }
+
 
         public  async Task RunAsync()
         {
 
 
 
-                try
-                {
-                    // New code:
-                    HttpResponseMessage response = await client.GetAsync("api/picture/0");
 
-                    response.EnsureSuccessStatusCode();    // Throw if not a success code.
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        Picture pic = await response.Content.ReadAsAsync<Picture>();
-                        Console.WriteLine("{0}\t${1}\t{2}", pic.Name, pic.Description, pic.Id);
-                    }
-
-
-                }
-                catch (HttpRequestException e)
-                {
-                    // Handle exception.
-                }
 
 
             
