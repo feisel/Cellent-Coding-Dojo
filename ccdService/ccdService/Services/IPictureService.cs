@@ -1,4 +1,5 @@
 ﻿using ccdService.Controllers;
+using ccdService.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +9,15 @@ namespace ccdService.Services
 {
     public interface IPictureService
     {
-        IEnumerable<PictureEntity> GetAllPictures();
+        IEnumerable<Picture> GetAllPictures();
 
-        PictureEntity GetPicture(int id);
+        Picture GetPicture(int id);
 
-        PictureEntity CreatePicture(string name, string description,byte[] content);
+        Picture CreatePicture(string name, string description,byte[] content,double longitude,double latidude);
 
         void DeletePicture(int id);
 
-        void UpdatePicture(PictureEntity picture);
+        void UpdatePicture(int id,string name, string description, byte[] content, double longitude, double latidude);
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using ccdService.Models;
+﻿using ccdService.DB;
+using ccdService.Models;
 using ccdService.Services;
 using System;
 using System.Collections.Generic;
@@ -20,35 +21,62 @@ namespace ccdService.Controllers
      
 
         // GET api/values
-        public IEnumerable<Picture> Get()
+        public IEnumerable<PictureModel> Get()
         {
             var allPictures = service.GetAllPictures();
-            var response = ConvertPictureEntityListToPictureList(allPictures);
-            return response;
+
+            var resultList = new List<PictureModel>();
+
+            foreach(var picture in allPictures)
+            {
+                var model = ConvertPictureToPictureModel(picture);
+                resultList.Add(model);
+            }
+
+            return resultList;
+           // return response;
+        }
+
+
+        private static PictureModel ConvertPictureToPictureModel(Picture picture)
+        {
+            PictureModel model = new PictureModel();
+            model.Description = picture.Description;
+            model.Id = picture.ID;
+            model.Name = picture.Name;
+            model.UserId = picture.UserId;
+            return model;
         }
 
         // GET api/values/5
-        public Picture Get(int id)
+        public PictureDetailsModel Get(int id)
         {
             var picture = service.GetPicture(id);
             if (picture == null)
                 return null;
-            var response = ConvertPictureEntityToPicture(picture);
-            return response;
+
+            var model = new PictureDetailsModel();
+            model.Content = picture.Details.Content;
+            model.IsSmiling = picture.Details.IsSmiling;
+            model.Longitude = picture.Details.Longitude;
+            model.Latitude = picture.Details.Latitude;
+            model.Name = picture.Name;
+            model.Description = picture.Description;
+            model.Id = picture.ID;
+
+            return model;
         }
 
         // POST api/values
-        public void Post([FromBody]Picture picture)
+        public void Post([FromBody]PictureCreateModel picture)
         {
-            service.CreatePicture(picture.Name,picture.Description,picture.Details.Content);
+           service.CreatePicture(picture.Name,picture.Description,picture.Content,picture.Longitude,picture.Latitude);
         }
 
         // PUT api/values/5
-        public void Put(int id, [FromBody]Picture picture)
+        public void Put(int id, [FromBody]PictureCreateModel picture)
         {
-            var pictureEntity = ConvertPictureToPictureEntity(picture);
-
-            service.UpdatePicture(pictureEntity);
+            service.UpdatePicture(id, picture.Name, picture.Description, picture.Content, picture.Longitude, picture.Latitude);
         }
 
         // DELETE api/values/5
@@ -58,67 +86,11 @@ namespace ccdService.Controllers
         }
 
 
-        private Picture ConvertPictureEntityToPicture(PictureEntity entity)
-        {
-            Picture pic = new Picture();
-            pic.Id = entity.Id;
-            pic.Name = entity.Name;
-            pic.UserId = entity.UserId;
-            pic.Description = entity.Description;
-            pic.Details = new PictureDetails();
-            if (pic.Details != null)
-            {
-                pic.Details.Content = entity.Details.Content;
-                pic.Details.IsSmiling = entity.Details.IsSmiling;
-                pic.Details.Position = entity.Details.Position;
-            }
 
-            return pic;
-        }
+     
 
 
-        private IEnumerable<Picture> ConvertPictureEntityListToPictureList(IEnumerable<PictureEntity> pictures)
-        {
-            List<Picture> resultList = new List<Picture>();
 
-            foreach (var entity in pictures)
-            {
-                var convertedPic = ConvertPictureEntityToPicture(entity);
-                resultList.Add(convertedPic);
-            }
-            return resultList;
-        }
-
-
-        private PictureEntity ConvertPictureToPictureEntity(Picture pic)
-        {
-            PictureEntity entity = new PictureEntity();
-            entity.Id = pic.Id;
-            entity.Name = pic.Name;
-            entity.UserId = pic.UserId;
-            entity.Description = pic.Description;
-            entity.Details = new PictureDetailsEntity();
-            if (pic.Details!=null)
-            {
-                entity.Details.Content = pic.Details.Content;
-                entity.Details.IsSmiling = pic.Details.IsSmiling;
-                entity.Details.Position = pic.Details.Position;
-            }
-
-            return entity; 
-        }
-
-        private IEnumerable<PictureEntity> ConvertPictureListToPictureEntityList(IEnumerable<Picture> pictures)
-        {
-            List<PictureEntity> resultList = new List<PictureEntity>();
-
-            foreach(var pic in pictures)
-            {
-                var convertedPic = ConvertPictureToPictureEntity(pic);
-                resultList.Add(convertedPic);
-            }
-            return resultList;
-        }
 
 
     }

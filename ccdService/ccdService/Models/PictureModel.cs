@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ccdService.Services
+namespace ccdService.Models
 {
-    public class PictureEntity
+
+    public class PictureModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int UserId { get; set; }
 
-        public PictureEntity()
+        public PictureModel()
         {
-            Details = new PictureDetailsEntity();
+
+
         }
-
-
-        public PictureDetailsEntity Details { get; set; }
     }
 }

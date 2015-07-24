@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ccdService.Controllers;
+using ccdService.DB;
 
 namespace ccdService.Services
 {
@@ -16,9 +17,9 @@ namespace ccdService.Services
             this.provider = provider;
         }
 
-        public PictureEntity CreatePicture(string name, string description, byte[] content)
+        public Picture CreatePicture(string name, string description, byte[] content, double longitude, double latidude)
         {
-            return provider.CreatePicture(name, description, content);
+            return provider.CreatePicture(name, description, content, longitude, latidude);
         }
 
         public void DeletePicture(int id)
@@ -26,20 +27,28 @@ namespace ccdService.Services
             provider.DeletePicture(id);
         }
 
-        public IEnumerable<PictureEntity> GetAllPictures()
+        public IEnumerable<Picture> GetAllPictures()
         {
 
             return provider.GetAllPictures();
 
         }
 
-        public PictureEntity GetPicture(int id)
+        public Picture GetPicture(int id)
         {
             return provider.GetPicture(id);
         }
 
-        public void UpdatePicture(PictureEntity picture)
+        public void UpdatePicture(int id, string name, string description, byte[] content, double longitude, double latidude)
         {
+            var picture = provider.GetPicture(id);
+
+            picture.Name = name;
+            picture.Description = description;
+            picture.Details.Content = content;
+            picture.Details.Longitude = longitude;
+            picture.Details.Latitude = latidude;
+
             provider.UpdatePicture(picture);
         }
     }

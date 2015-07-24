@@ -9,7 +9,10 @@
     <Grid>
         <Button x:Name="button" Content="ListAllPictures" HorizontalAlignment="Left" Margin="50,104,0,0" VerticalAlignment="Top" Width="92" Click="button_Click"/>
         <Button x:Name="button_Copy" Content="Upload Picture" HorizontalAlignment="Left" Margin="50,191,0,0" VerticalAlignment="Top" Width="92" Click="button_Copy_Click"/>
-        <Button x:Name="button_Copy1" Content="Delete Picture" HorizontalAlignment="Left" Margin="50,227,0,0" VerticalAlignment="Top" Width="92" Click="button_Copy_Click"/>
+        <Button x:Name="button_Copy1" Content="Delete Picture" HorizontalAlignment="Left" Margin="50,227,0,0" VerticalAlignment="Top" Width="92" Click="button_DeletePicture_Click"/>
+        <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="230" Margin="170,10,0,0" VerticalAlignment="Top" Width="209"/>
+        <Button x:Name="button_Copy2" Content="GetPicture" HorizontalAlignment="Left" Margin="50,140,0,0" VerticalAlignment="Top" Width="92" Click="button_GetPicture_Click"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="100" Margin="398,140,0,0" VerticalAlignment="Top" Width="100"/>
 
     </Grid>
 </Window>

@@ -3,75 +3,76 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ccdService.Controllers;
+using ccdService.DB;
 
 namespace ccdService.Services
 {
     public class PictureProvider : IPictureProvider
     {
-        private List<PictureEntity> pictureList = new List<PictureEntity>();
+
+        private PictureContext dbContext;
 
         public PictureProvider()
         {
-            pictureList.AddRange(CreateDummyPictures());
+            dbContext = new PictureContext();
+            //Falls Datenbank nicht existieren anlegen
+            dbContext.Database.CreateIfNotExists();
+        }
+
+        public IEnumerable<Picture> GetAllPictures()
+        {
+           return  dbContext.Pictures.ToList();
         }
 
 
-        private static IEnumerable<PictureEntity> CreateDummyPictures()
+        public Picture GetPicture(int id)
         {
-            List<PictureEntity> resultList = new List<PictureEntity>();
-
-            PictureEntity pic = new PictureEntity();
-            pic.UserId = 1;
-            pic.Description = "TestBild";
-            pic.Name = "TestBild";
-
-            resultList.Add(pic);
-            return resultList;
+            return dbContext.Pictures.Where(x => x.ID == id).SingleOrDefault();
         }
 
-        public IEnumerable<PictureEntity> GetAllPictures()
+        public Picture CreatePicture(string name, string description,byte[] content, double longitude, double latidude)
         {
-            return pictureList;
-        }
-
-
-        public PictureEntity GetPicture(int id)
-        {
-            return pictureList.Where(x => x.Id == id).SingleOrDefault();
-        }
-
-        public PictureEntity CreatePicture(string name, string description,byte[] content)
-        {
-            var newPicture = new PictureEntity();
+            var newPicture = new Picture();
             var newId = GetNextValidPictureId();
-            newPicture.Id = newId;
+            newPicture.ID = newId;
             newPicture.Description = description;
             newPicture.Name = name;
-            newPicture.Details = new PictureDetailsEntity();
+            newPicture.Details = new PictureDetails();
             newPicture.Details.Content = content;
+            newPicture.Details.Latitude = latidude;
+            newPicture.Details.Longitude = longitude;
 
-            pictureList.Add(newPicture);
+            dbContext.Pictures.Add(newPicture);
+            dbContext.SaveChanges();
 
             return newPicture;
         }
 
         private int GetNextValidPictureId()
         {
-            var currentMaxId = pictureList.Max(x => x.Id);
+            var currentMaxId = dbContext.Pictures.Max(x => x.ID);
             var newId = currentMaxId + 1;
             return newId;
         }
 
         public void DeletePicture(int id)
         {
-           var picture =  pictureList.Where(x => x.Id == id).SingleOrDefault();
+
+           
+            var picture = dbContext.Pictures.Where(x => x.ID == id).SingleOrDefault();
+
             if (picture != null)
-                pictureList.Remove(picture);
+            {
+                dbContext.PictureDetails.Remove(picture.Details);
+                dbContext.Pictures.Remove(picture);
+                dbContext.SaveChanges();
+            }
+
         }
 
-        public void UpdatePicture(PictureEntity picture)
+        public void UpdatePicture(Picture picture)
         {
-            var pictureEntity = pictureList.Where(x => x.Id == picture.Id).SingleOrDefault();
+            var pictureEntity = dbContext.Pictures.Where(x => x.ID == picture.ID).SingleOrDefault();
             if (pictureEntity != null)
             {
                 pictureEntity.Description = picture.Description;

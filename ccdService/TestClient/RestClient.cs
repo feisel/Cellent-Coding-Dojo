@@ -18,11 +18,12 @@ namespace TestClient
             client = new HttpClient();
             // New code:
             client.BaseAddress = new Uri("http://localhost:17553/");
+            client.BaseAddress = new Uri("http://ccdservice.azurewebsites.net/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task UploadNewPicture(Picture picture)
+        public async Task UploadNewPicture(PictureDetails picture)
         {
          
             var response = await client.PostAsJsonAsync(PICTURESERVICEPATH, picture);
@@ -43,8 +44,7 @@ namespace TestClient
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<IEnumerable<Picture>>();
-                    
+                    return await response.Content.ReadAsAsync<IEnumerable<Picture>>();                 
                 }
 
                 return null;
@@ -56,22 +56,44 @@ namespace TestClient
             }
         }
 
-
-        public  async Task RunAsync()
+        public async Task<PictureDetails> GetPicture(int id)
         {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(PICTURESERVICEPATH + "/" + id.ToString());
+
+                response.EnsureSuccessStatusCode();    // Throw if not a success code.
 
 
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<PictureDetails>();
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                // Handle exception.
+                throw;
+            }
 
-
-
-
-            
+            return null;
         }
 
 
-        private void Connect()
+        public async Task DeletePicture(int id)
         {
-           
+            try
+            {
+                HttpResponseMessage response = await client.DeleteAsync(PICTURESERVICEPATH+"/"+id.ToString());
+
+                response.EnsureSuccessStatusCode();    // Throw if not a success code.
+            }
+            catch (HttpRequestException e)
+            {
+                // Handle exception.
+                throw;
+            }
         }
+        
     }
 }

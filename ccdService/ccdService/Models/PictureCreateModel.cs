@@ -5,22 +5,12 @@ using System.Web;
 
 namespace ccdService.Models
 {
-
-    public class Picture
+    public class PictureCreateModel
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int UserId { get; set; }
-
-
-
-        public PictureDetails Details { get; set; }
-
-        public Picture()
-        {
-
-
-        }
+        public byte[] Content { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
     }
 }

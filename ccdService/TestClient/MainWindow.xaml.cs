@@ -27,7 +27,9 @@ namespace TestClient
         {
             InitializeComponent();
 
-            
+            listBox.DisplayMemberPath = "Name";
+
+
         }
 
         private async void button_Click(object sender, RoutedEventArgs e)
@@ -35,12 +37,61 @@ namespace TestClient
            var result = await  restclient.GetAllPictures();
 
 
-            foreach(var pic in result)
-            {
-
-            }
+            listBox.ItemsSource = result;
+           
            
         }
+
+        private async void button_DeletePicture_Click(object sender, RoutedEventArgs e)
+        {
+            var picture = listBox.SelectedItem as Picture;
+
+            if (picture == null)
+                return;
+
+            await restclient.DeletePicture(picture.Id);
+        }
+
+        private async void button_GetPicture_Click(object sender, RoutedEventArgs e)
+        {
+            var picture = listBox.SelectedItem as Picture;
+
+            if (picture == null)
+                return;
+
+            var pictureDetails = await restclient.GetPicture(picture.Id);
+
+
+            if (pictureDetails!=null && pictureDetails.Content!=null)
+            {
+                var bitmapImage = LoadImage(pictureDetails.Content);
+                this.image.Source = bitmapImage;
+            }
+        }
+
+
+        private static BitmapImage LoadImage(byte[] imageData)
+        {
+            if (imageData == null || imageData.Length == 0) return null;
+            var image = new BitmapImage();
+            using (var mem = new MemoryStream(imageData))
+            {
+                mem.Position = 0;
+                image.BeginInit();
+                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = null;
+                image.StreamSource = mem;
+                image.EndInit();
+            }
+            image.Freeze();
+            return image;
+        }
+
+
+
+
+
 
         private void button_Copy_Click(object sender, RoutedEventArgs e)
         {
@@ -48,14 +99,13 @@ namespace TestClient
 
             var fileContent = File.ReadAllBytes(filePath);
 
-            Picture newPicture = new Picture();
+            PictureDetails newPicture = new PictureDetails();
             
             newPicture.Description = "testPic2";
             newPicture.Name = "asdfasd";
-            newPicture.Details = new PictureDetails();
-            newPicture.Details.Position.Altitude = 54.03;
-            newPicture.Details.Position.Longitude = 10;
-            newPicture.Details.Content = fileContent;
+            newPicture.Latitude = 54.03;
+            newPicture.Longitude = 10;
+            newPicture.Content = fileContent;
             
 
             restclient.UploadNewPicture(newPicture);
