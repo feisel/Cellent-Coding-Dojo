@@ -68,9 +68,23 @@ namespace ccdService.Controllers
         }
 
         // POST api/values
-        public void Post([FromBody]PictureCreateModel picture)
+        public HttpResponseMessage Post([FromBody]PictureCreateModel picture)
         {
-           service.CreatePicture(picture.Name,picture.Description,picture.Content,picture.Longitude,picture.Latitude);
+          var newPicture =  service.CreatePicture(picture.Name,picture.Description,picture.Content,picture.Longitude,picture.Latitude);
+
+            PictureModel returnModel = new PictureModel();
+            returnModel.Description = newPicture.Description;
+            returnModel.Id = newPicture.ID;
+            returnModel.Name = newPicture.Name;
+            returnModel.UserId = newPicture.UserId;
+
+
+            var response = Request.CreateResponse<PictureModel>(System.Net.HttpStatusCode.Created, returnModel);
+
+            // Generate a link to the new book and set the Location header in the response.
+            string uri = Url.Link("DefaultApi", new { id = returnModel.Id });
+            response.Headers.Location = new Uri(uri);
+            return response;
         }
 
         // PUT api/values/5
