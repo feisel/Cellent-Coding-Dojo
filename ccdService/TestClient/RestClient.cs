@@ -18,7 +18,7 @@ namespace TestClient
             client = new HttpClient();
             // New code:
             client.BaseAddress = new Uri("http://localhost:17553/");
-            client.BaseAddress = new Uri("http://ccdservice.azurewebsites.net/");
+          //  client.BaseAddress = new Uri("http://ccdservice.azurewebsites.net/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

@@ -95,14 +95,14 @@ namespace TestClient
 
         private void button_Copy_Click(object sender, RoutedEventArgs e)
         {
-            var filePath = @"C:\Users\feisele\Pictures\IMG_7455.jpg";
+            var filePath = @"C:\Users\feisele\Dropbox\Photos\Geschäft\IMG_4360.jpg";
 
             var fileContent = File.ReadAllBytes(filePath);
 
             PictureDetails newPicture = new PictureDetails();
             
-            newPicture.Description = "testPic2";
-            newPicture.Name = "asdfasd";
+            newPicture.Description = "Fabi";
+            newPicture.Name = "Fabi";
             newPicture.Latitude = 54.03;
             newPicture.Longitude = 10;
             newPicture.Content = fileContent;
